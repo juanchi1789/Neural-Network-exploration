@@ -80,19 +80,21 @@ flowchart TD
 ## Instalación Inicial
 
 ```bash
-python -m venv .venv
+/usr/local/bin/python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
-python -m ipykernel install --user --name neural-network-exploration
+python -m ipykernel install --user --name neural-network-exploration --display-name "Python (Neural Network Exploration)"
 ```
+
+En Jupyter o VS Code, seleccionar el kernel `Python (Neural Network Exploration)`.
 
 ## Referencias Iniciales
 
 - Izhikevich, E. M. (2003). Simple Model of Spiking Neurons.
 - Izhikevich, E. M. (2004). Which Model to Use for Cortical Spiking Neurons?
-- Referencias futuras sobre circuitos motores espinales, inhibición recurrente y modelos neuromusculares.
-
-## Estado del Proyecto
-
-Early planning / project scaffold. La estructura está preparada para implementar el proyecto fase por fase.
-
+- Modeling spinal locomotor circuits for movements in developing zebrafish. Yann Roussel
+- Modeling and Identification of a Realistic Spiking
+Neural Network and Musculoskeletal Model of the
+Human Arm, and an Application to the Stretch Reflex.
+Manish Sreenivasa
