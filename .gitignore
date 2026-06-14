@@ -1,0 +1,36 @@
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local environment files
+.env
+.env.*
+
+# OS/editor files
+.DS_Store
+.idea/
+.vscode/
+
+# Generated project outputs
+outputs/figures/*
+outputs/animations/*
+outputs/tables/*
+!outputs/figures/.gitkeep
+!outputs/animations/.gitkeep
+!outputs/tables/.gitkeep
+
+# Generated simulation data
+data/processed/*
+data/simulations/*
+!data/processed/.gitkeep
+!data/simulations/.gitkeep
