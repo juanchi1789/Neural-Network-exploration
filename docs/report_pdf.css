@@ -1,0 +1,145 @@
+@page {
+  size: A4;
+  margin: 20mm 18mm 22mm 18mm;
+}
+
+:root {
+  --ink: #17263a;
+  --muted: #52657a;
+  --accent: #167d9a;
+  --line: #cbd6df;
+  --soft: #f1f6f8;
+}
+
+html {
+  font-size: 10.5pt;
+}
+
+body {
+  max-width: none;
+  margin: 0;
+  color: var(--ink);
+  font-family: "Aptos", "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.48;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+h1, h2, h3 {
+  color: var(--ink);
+  line-height: 1.18;
+  page-break-after: avoid;
+}
+
+h1 {
+  margin: 0 0 8mm;
+  padding-bottom: 5mm;
+  border-bottom: 3px solid var(--accent);
+  font-size: 25pt;
+}
+
+h2 {
+  margin: 8mm 0 3mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--line);
+  font-size: 16pt;
+}
+
+h3 {
+  margin: 5mm 0 2mm;
+  color: var(--accent);
+  font-size: 12.5pt;
+}
+
+p {
+  margin: 0 0 3.2mm;
+  orphans: 3;
+  widows: 3;
+}
+
+ul, ol {
+  margin: 1.5mm 0 4mm 6mm;
+  padding-left: 5mm;
+}
+
+li {
+  margin-bottom: 1.2mm;
+}
+
+pre {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  margin: 3mm 0 4mm;
+  padding: 3.5mm 4mm;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 4px;
+  background: var(--soft);
+  color: #24394f;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 8.7pt;
+  line-height: 1.35;
+  page-break-inside: avoid;
+}
+
+code {
+  border-radius: 3px;
+  background: var(--soft);
+  padding: 0.1em 0.28em;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.9em;
+}
+
+pre code {
+  padding: 0;
+  background: transparent;
+}
+
+table {
+  width: 100%;
+  margin: 3mm 0 5mm;
+  border-collapse: collapse;
+  font-size: 9.3pt;
+  page-break-inside: avoid;
+}
+
+th, td {
+  padding: 2.2mm 2.5mm;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #dcecf1;
+  color: var(--ink);
+}
+
+blockquote {
+  margin: 4mm 0;
+  padding: 2mm 4mm;
+  border-left: 4px solid var(--accent);
+  color: var(--muted);
+  background: var(--soft);
+}
+
+a {
+  color: #0b6983;
+  text-decoration: none;
+}
+
+math {
+  font-size: 1.05em;
+}
+
+.display.math {
+  display: block;
+  margin: 4mm auto;
+  text-align: center;
+  page-break-inside: avoid;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+}

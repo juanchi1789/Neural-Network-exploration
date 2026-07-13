@@ -1,0 +1,550 @@
+% ============================================================
+% Resumen de Trabajo Final
+% Archivo autónomo para Overleaf. Compilador: pdfLaTeX.
+% Copiar todo este contenido dentro de main.tex.
+% ============================================================
+\documentclass[11pt,a4paper]{article}
+
+% Idioma, codificación y tipografía
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}}
+\DeclareUnicodeCharacter{2193}{\ensuremath{\downarrow}}
+
+% Página y estructura
+\usepackage[a4paper,margin=2.4cm,headheight=15pt]{geometry}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+
+% Matemática
+\usepackage{amsmath,amssymb}
+
+% Colores, enlaces y bloques de código
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{listings}
+
+% Paleta visual
+\definecolor{ink}{HTML}{17263A}
+\definecolor{muted}{HTML}{52657A}
+\definecolor{accent}{HTML}{167D9A}
+\definecolor{soft}{HTML}{F1F6F8}
+\definecolor{line}{HTML}{CBD6DF}
+
+% Enlaces y metadatos
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  citecolor=accent,
+  pdftitle={Resumen de Trabajo Final},
+  pdfsubject={Simulación progresiva de un circuito neuromotor},
+  pdfauthor={Neural Network Exploration}
+}
+\urlstyle{same}
+
+% Encabezados
+\titleformat{\section}
+  {\Large\bfseries\color{ink}}{}{0pt}{}[\vspace{1mm}\color{line}\titlerule]
+\titleformat{\subsection}
+  {\large\bfseries\color{accent}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{1.1em}{0.55em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.35em}
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{2}
+
+% Listas
+\setlist[itemize]{leftmargin=1.6em,itemsep=0.25em,topsep=0.35em}
+\setlist[enumerate]{leftmargin=1.8em,itemsep=0.35em,topsep=0.35em}
+
+% Código y diagramas de texto. Las reglas literate permiten compilar
+% directamente las flechas presentes en el Markdown con pdfLaTeX.
+\lstdefinestyle{reportcode}{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{soft},
+  frame=single,
+  rulecolor=\color{line},
+  framesep=6pt,
+  xleftmargin=0.5em,
+  xrightmargin=0.5em,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  literate={↓}{{$\downarrow$}}1 {→}{{$\rightarrow$}}1
+}
+\lstset{style=reportcode}
+
+% Compatibilidad con listas compactas producidas por Pandoc
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Encabezado y pie
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{muted}Resumen de Trabajo Final}
+\fancyhead[R]{\small\color{muted}Circuito neuromotor}
+\fancyfoot[C]{\small\color{muted}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{line}\leaders\hrule height \headrulewidth\hfill}}
+
+% Evita líneas desbordadas por URLs o nombres técnicos largos
+\setlength{\emergencystretch}{3em}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{3.0cm}
+  {\Huge\bfseries\color{ink} Resumen de Trabajo Final \par}
+  \vspace{1.2cm}
+  {\LARGE\bfseries\color{accent} Simulación progresiva de un circuito neuromotor mediante neuronas de Izhikevich \par}
+  \vfill
+  {\large Neural Network Exploration \par}
+  \vspace{0.3cm}
+  {\large \today \par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\hypertarget{introducciuxf3n}{%
+\section{1. Introducción}\label{introducciuxf3n}}
+
+Este trabajo desarrolla una simulación computacional progresiva de un
+circuito neuromotor simplificado. El recorrido comienza con una neurona
+individual, continúa con pools neuronales y redes conectadas, incorpora
+un circuito de inhibición recurrente tipo Renshaw y finaliza con la
+transformación de los spikes de las motoneuronas en una señal muscular
+estimada.
+
+El propósito no es reproducir de manera completa la fisiología del
+sistema motor ni construir un modelo biomecánico. Se busca una
+implementación pequeña, reproducible, visual e interpretable que permita
+comprender cómo se conectan distintos niveles de una simulación
+neuromotora:
+
+\begin{lstlisting}
+Input externo
+      ↓
+Dinámica de una neurona spiking
+      ↓
+Actividad de un pool neuronal
+      ↓
+Conectividad sináptica
+      ↓
+Feedback inhibitorio tipo Renshaw
+      ↓
+Conversión de spikes en activación muscular simplificada
+\end{lstlisting}
+
+\hypertarget{objetivo-general}{%
+\section{2. Objetivo general}\label{objetivo-general}}
+
+Construir un modelo computacional progresivo que vincule la actividad de
+neuronas spiking con un circuito de inhibición recurrente y una salida
+muscular simplificada, priorizando claridad conceptual, modularidad y
+reproducibilidad.
+
+\hypertarget{objetivos-especuxedficos}{%
+\section{3. Objetivos específicos}\label{objetivos-especuxedficos}}
+
+\begin{itemize}
+\item
+  Implementar el modelo neuronal de Izhikevich
+\item
+  Explorar diferentes formas de corriente externa o comando motor
+\item
+  Simular una neurona individual y un pool neuronal heterogéneo
+\item
+  Representar conexiones sinápticas mediante matrices de pesos
+\item
+  Incorporar conexiones excitatorias e inhibitorias con dinámica
+  temporal
+\item
+  Construir un circuito con motoneuronas y células de Renshaw
+  idealizadas
+\item
+  Comparar configuraciones manteniendo controladas las fuentes de
+  aleatoriedad
+\item
+  Convertir los spikes de las motoneuronas en una señal contráctil
+  basada en twitches
+\end{itemize}
+
+\hypertarget{alcance-del-modelo}{%
+\section{4. Alcance del modelo}\label{alcance-del-modelo}}
+
+El trabajo se plantea como una maqueta computacional. Las neuronas,
+sinapsis, conexiones y respuestas musculares utilizan unidades y
+parámetros abstractos o idealizados. El circuito permite estudiar
+relaciones funcionales entre sus componentes, pero no pretende estimar
+directamente voltajes, corrientes o fuerzas de un sistema biológico
+real.
+
+Las principales simplificaciones metodológicas son:
+
+\begin{itemize}
+\tightlist
+\item
+  parámetros neuronales no calibrados con registros experimentales
+  específicos
+\item
+  conexiones aleatorias
+\item
+  comando motor artificial
+\item
+  sinapsis basadas en corriente y estados exponenciales
+\item
+  ausencia de retardos axonales, plasticidad y potenciales de reversión
+\item
+  ausencia de feedback sensorial
+\item
+  ausencia de músculo antagonista y biomecánica articular
+\item
+  fuerza muscular expresada en unidades arbitrarias
+\end{itemize}
+
+\hypertarget{modelo-neuronal}{%
+\section{5. Modelo neuronal}\label{modelo-neuronal}}
+
+\hypertarget{ecuaciones-de-izhikevich}{%
+\subsection{5.1. Ecuaciones de
+Izhikevich}\label{ecuaciones-de-izhikevich}}
+
+La dinámica neuronal se representa mediante:
+
+\$ \frac{dv}{dt}=0.04v\^{}2+5v+140-u+I \$
+
+\$ \frac{du}{dt}=a(bv-u) \$
+
+donde:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{v} es el potencial de membrana;
+\item
+  \texttt{u} es una variable de recuperación;
+\item
+  \texttt{I} es la corriente total recibida;
+\item
+  \texttt{a} controla la velocidad de recuperación;
+\item
+  \texttt{b} controla el acoplamiento entre \texttt{v} y \texttt{u};
+\item
+  \texttt{c} es el potencial aplicado después de un spike;
+\item
+  \texttt{d} es el incremento de recuperación después del spike.
+\end{itemize}
+
+Cuando \texttt{v} alcanza 30 mV se registra un spike y se aplica:
+
+\$ v=c,\qquad u=u+d \$
+
+La elección de este modelo permite representar diferentes patrones de
+disparo con pocas variables y un costo computacional reducido.
+
+\hypertarget{generaciuxf3n-de-inputs}{%
+\section{6. Generación de inputs}\label{generaciuxf3n-de-inputs}}
+
+Se implementaron distintas formas de corriente externa para estudiar
+cómo cambia la actividad neuronal frente a comandos temporales
+diferentes:
+
+\begin{itemize}
+\tightlist
+\item
+  corriente constante
+\item
+  pulso
+\item
+  rampa
+\item
+  señal sinusoidal
+\item
+  comando motor artificial con subida, mantenimiento y relajación
+\item
+  ruido individual
+\end{itemize}
+
+El input se genera como un vector alineado con el tiempo de simulación.
+En los pools neuronales puede compartirse una señal común y agregarse
+ruido independiente a cada neurona.
+
+\hypertarget{pool-neuronal-y-heterogeneidad}{%
+\section{7. Pool neuronal y
+heterogeneidad}\label{pool-neuronal-y-heterogeneidad}}
+
+El modelo individual se extendió a poblaciones pequeñas. Cada neurona
+conserva sus propias variables \texttt{v} y \texttt{u}, por lo que las
+matrices de estado tienen la forma:
+
+\begin{lstlisting}
+(número de neuronas, número de pasos temporales)
+\end{lstlisting}
+
+La heterogeneidad se introduce mediante pequeñas variaciones aleatorias
+en \texttt{a}, \texttt{b}, \texttt{c} y \texttt{d}. Esto evita que todas
+las neuronas respondan de manera idéntica al mismo comando motor.
+
+\hypertarget{semilla-aleatoria}{%
+\subsection{7.1. Semilla aleatoria}\label{semilla-aleatoria}}
+
+La semilla controla el generador pseudoaleatorio empleado para producir:
+
+\begin{itemize}
+\tightlist
+\item
+  variaciones de parámetros;
+\item
+  ruido de input;
+\item
+  máscaras de conectividad.
+\end{itemize}
+
+No es una propiedad biológica. Su función es metodológica:
+
+\begin{lstlisting}
+misma configuración + misma semilla → misma realización
+
+misma configuración + otra semilla  → nueva realización aleatoria
+\end{lstlisting}
+
+Fijar la semilla permite reproducir una simulación y comparar escenarios
+sin cambiar simultáneamente el ruido o la conectividad. Repetir un
+experimento con varias semillas permite evaluar la robustez del
+procedimiento.
+
+\hypertarget{conectividad-sinuxe1ptica}{%
+\section{8. Conectividad sináptica}\label{conectividad-sinuxe1ptica}}
+
+\hypertarget{matriz-de-pesos}{%
+\subsection{8.1. Matriz de pesos}\label{matriz-de-pesos}}
+
+Las conexiones entre neuronas se representan mediante una matriz
+\texttt{W} con la convención:
+
+\begin{lstlisting}
+W[i, j] = efecto de la neurona origen i sobre una neurona destino j
+\end{lstlisting}
+
+Por lo tanto:
+
+\begin{itemize}
+\tightlist
+\item
+  las filas representan neuronas de origen;
+\item
+  las columnas representan neuronas de destino;
+\item
+  un cero indica ausencia de conexión;
+\item
+  la magnitud indica la fuerza de la conexión;
+\item
+  el uso o signo del peso determina si la conexión es excitatoria o
+  inhibitoria.
+\end{itemize}
+
+Las matrices se crean mediante máscaras aleatorias controladas por una
+probabilidad de conexión. La probabilidad define cuántas conexiones
+existen, mientras que el peso define la magnitud de cada conexión.
+
+\hypertarget{circuito-de-inhibiciuxf3n-recurrente-tipo-renshaw}{%
+\section{9. Circuito de inhibición recurrente tipo
+Renshaw}\label{circuito-de-inhibiciuxf3n-recurrente-tipo-renshaw}}
+
+El circuito utiliza dos poblaciones:
+
+\begin{itemize}
+\tightlist
+\item
+  un pool de motoneuronas
+\item
+  un pool más pequeño de células de Renshaw.
+\end{itemize}
+
+Las motoneuronas utilizan inicialmente un preset
+\texttt{Regular\ Spiking}. Las Renshaw utilizan \texttt{Fast\ Spiking}
+como aproximación funcional a una interneurona rápida. Estos presets no
+constituyen una calibración biológica específica.
+
+\hypertarget{flujo-del-circuito}{%
+\subsection{9.1. Flujo del circuito}\label{flujo-del-circuito}}
+
+\begin{lstlisting}
+comando motor
+      ↓
+
+pool de motoneuronas
+
+      ↓ 
+
+spikes y estados sinápticos W_MN_to_R
+
+      ↓ 
+
+excitación pool de células de Renshaw
+
+      ↓ 
+
+spikes y estados sinápticos W_R_to_MN
+
+      ↓ 
+
+corriente inhibitoria resta sobre el input de las motoneuronas
+
+      ↓
+nueva actualización del pool motor
+\end{lstlisting}
+
+\hypertarget{matrices-del-circuito}{%
+\subsection{9.2. Matrices del circuito}\label{matrices-del-circuito}}
+
+Se emplean dos matrices distintas:
+
+\begin{lstlisting}
+W_MN_to_R:  motoneuronas → Renshaw
+W_R_to_MN:  Renshaw → motoneuronas
+\end{lstlisting}
+
+Por ejemplo con 20 motoneuronas y 5 Renshaw:
+
+\begin{lstlisting}
+W_MN_to_R.shape = (20, 5)
+W_R_to_MN.shape = (5, 20)
+\end{lstlisting}
+
+Ambas matrices almacenan magnitudes positivas. \texttt{W\_MN\_to\_R} se
+utiliza como excitación. \texttt{W\_R\_to\_MN} representa una vía
+inhibitoria porque su corriente se resta explícitamente del input motor:
+
+\$ I\_\{MN\}=I\_\{motor\}+I\_\{ruido\}-I\_\{Renshaw\} \$
+
+\$ I\_R=I\_\{MN\rightarrow R\}+I\_\{ruido,R\} \$
+
+Esta convención mantiene separado el valor almacenado en la matriz del
+efecto funcional que produce en la ecuación.
+
+\hypertarget{diseuxf1o-de-comparaciones}{%
+\section{10. Diseño de comparaciones}\label{diseuxf1o-de-comparaciones}}
+
+Para estudiar el papel de la inhibición recurrente se definieron
+escenarios con distintas magnitudes de la vía
+\texttt{Renshaw\ →\ motoneurona}.
+
+La metodología mantiene constantes:
+
+\begin{itemize}
+\tightlist
+\item
+  tamaño de los pools
+\item
+  input externo
+\item
+  parámetros neuronales base
+\item
+  nivel de ruido
+\item
+  probabilidades de conexión
+\end{itemize}
+
+El único parámetro que se modifica entre escenarios es la magnitud
+inhibitoria.
+
+\hypertarget{muxe9tricas-implementadas}{%
+\section{11. Métricas implementadas}\label{muxe9tricas-implementadas}}
+
+Las métricas se utilizan para resumir la actividad sin depender
+únicamente de una inspección visual:
+
+\begin{itemize}
+\tightlist
+\item
+  spikes totales
+\item
+  firing rate medio
+\item
+  cantidad de motoneuronas activas
+\item
+  actividad poblacional por ventanas temporales
+\item
+  pico de actividad poblacional
+\item
+  corriente inhibitoria media
+\item
+  intervalos entre spikes
+\item
+  variabilidad de los intervalos
+\item
+  fuerza máxima
+\item
+  fuerza media
+\item
+  tiempo hasta el pico de fuerza
+\end{itemize}
+
+Estas métricas forman parte del método de análisis. Deben interpretarse
+junto con rasters, potenciales y señales temporales, ya que cada una
+resume un aspecto diferente de la simulación.
+
+\hypertarget{conversiuxf3n-de-spikes-en-fuerza-muscular}{%
+\section{12. Conversión de spikes en fuerza
+muscular}\label{conversiuxf3n-de-spikes-en-fuerza-muscular}}
+
+\hypertarget{twitch-elemental}{%
+\subsection{12.1. Twitch elemental}\label{twitch-elemental}}
+
+Cada spike genera una respuesta contráctil elemental:
+
+\$
+h(t)=A\left(e\^{}\{-t/\tau\emph{\{decay\}\}-e\^{}\{-t/\tau}\{rise\}\}\right),\qquad t\geq0
+\$
+
+Se utiliza esta diferencia de exponenciales porque produce una subida
+rápida seguida por una relajación más lenta. La condición
+\texttt{tau\_decay\ \textgreater{}\ tau\_rise} mantiene una forma
+positiva y causal.
+
+Se eligió por su simplicidad, bajo número de parámetros y capacidad para
+representar sumación temporal sin introducir un modelo muscular
+complejo.
+
+\hypertarget{convoluciuxf3n-de-spikes-y-twitches}{%
+\subsection{12.2. Convolución de spikes y
+twitches}\label{convoluciuxf3n-de-spikes-y-twitches}}
+
+La matriz de spikes se suma entre motoneuronas para formar un tren
+poblacional de impulsos. Luego se convoluciona con el kernel twitch:
+
+\$ F{[}t{]}=\sum\_\{k=0\}\^{}\{t\} impulsos{[}k{]}h{[}t-k{]} \$
+
+El procedimiento completo es:
+
+\begin{lstlisting}
+Matriz de spikes
+
+      ↓ 
+Sumar motoneuronas tren poblacional de impulsos
+
+      ↓ 
+Aplicar un twitch a cada impulso convolución temporal
+
+      ↓
+Suma de twitches superpuestos
+
+      ↓
+Fuerza total en unidades arbitrarias
+\end{lstlisting}
+
+La señal obtenida es un proxy de activación muscular. No se calcula
+fuerza física, torque articular ni movimiento.
+
+
+\end{document}

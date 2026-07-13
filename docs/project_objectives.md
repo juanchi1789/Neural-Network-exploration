@@ -11,7 +11,6 @@ Construir una simulación progresiva que conecte dinámica neuronal spiking con 
 - Simular un pool de motoneuronas idealizadas.
 - Convertir spikes en una señal de fuerza muscular mediante un modelo twitch.
 - Agregar inhibición recurrente tipo Renshaw.
-- Agregar inhibición recíproca entre sistemas agonista y antagonista.
 - Crear una visualización 2D simple de contracción muscular o movimiento.
 
 ## Alcance Mínimo
@@ -29,4 +28,4 @@ Construir una simulación progresiva que conecte dinámica neuronal spiking con 
 - Delays sinápticos e inhibición con dinámica temporal más detallada.
 - Modelo biomecánico 2D de brazo o articulación.
 - Interfaz interactiva con sliders para explorar parámetros.
-
+- Inhibición recíproca entre sistemas agonista y antagonista.

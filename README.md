@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Este proyecto propone una simulación neuronal progresiva usando el modelo de neurona spiking de Izhikevich. La aplicación conceptual está orientada al sistema motor: motoneuronas, pools neuronales, transformación de spikes en fuerza muscular simplificada, inhibición recurrente tipo Renshaw e inhibición recíproca entre sistemas agonista-antagonista.
+Este proyecto propone una simulación neuronal progresiva usando el modelo de neurona spiking de Izhikevich. La aplicación conceptual está orientada al sistema motor: motoneuronas, pools neuronales, conectividad sináptica, inhibición recurrente tipo Renshaw y transformación de spikes en una fuerza muscular simplificada.
 
 El objetivo no es construir un modelo biológico completo, sino una maqueta computacional progresiva, visual e interpretable.
 
@@ -17,7 +17,6 @@ Construir una simulación progresiva que conecte dinámica neuronal spiking con 
 - Simular un pool de motoneuronas idealizadas.
 - Convertir spikes en una señal de fuerza muscular.
 - Agregar inhibición recurrente tipo Renshaw.
-- Agregar un sistema agonista-antagonista con inhibición recíproca.
 - Crear una visualización simplificada de contracción muscular.
 
 ## Roadmap del Proyecto
@@ -25,10 +24,9 @@ Construir una simulación progresiva que conecte dinámica neuronal spiking con 
 - **Fase 1:** neurona individual Izhikevich.
 - **Fase 2:** estímulos constantes, pulsos, rampas, ruido y señales sinusoidales.
 - **Fase 3:** pool de motoneuronas.
-- **Fase 4:** conversión de spikes a fuerza muscular.
-- **Fase 5:** inhibición recurrente tipo Renshaw.
-- **Fase 6:** sistema agonista-antagonista.
-- **Fase 7:** visualización muscular simplificada.
+- **Fase 4:** inhibición recurrente tipo Renshaw.
+- **Fase 5:** comparación controlada de intensidades inhibitorias.
+- **Fase 6:** conversión de spikes a fuerza y visualización muscular simplificada.
 
 ## Flujo Principal
 
@@ -50,8 +48,7 @@ flowchart TD
     B --> C[Renshaw-like Recurrent Inhibition]
     C --> D[Regulated Motor Output]
     D --> E[Muscle Force]
-    E --> F[Agonist / Antagonist System]
-    F --> G[Net Force / Movement Proxy]
+    E --> F[Simplified Muscle Force]
 ```
 
 ## Arquitectura
@@ -65,17 +62,49 @@ flowchart TD
 - `outputs/animations/`: animaciones de contracción muscular o demos visuales.
 - `outputs/tables/`: tablas de métricas y resúmenes.
 - `docs/`: documentación teórica, objetivos y referencias.
-- `tests/`: pruebas básicas del scaffold y, más adelante, pruebas del comportamiento del modelo.
+- `tests/`: pruebas rápidas de forma, reproducibilidad, convención de signos y conversión a fuerza.
 
 ## Notebooks
 
-- `01_single_izhikevich_neuron.ipynb`: neurona Izhikevich individual.
-- `02_neuron_input_experiments.ipynb`: experimentos con distintos inputs.
-- `03_motor_neuron_pool.ipynb`: pool de motoneuronas.
-- `04_spikes_to_muscle_force.ipynb`: conversión spikes-fuerza.
-- `05_recurrent_inhibition_renshaw.ipynb`: inhibición recurrente tipo Renshaw.
-- `06_agonist_antagonist_system.ipynb`: agonista-antagonista e inhibición recíproca.
-- `07_visual_muscle_demo.ipynb`: demo visual de contracción muscular.
+- `01_izhikevich_neuron.ipynb`: neurona individual y pool independiente con heterogeneidad.
+- `02_neuron_interaction_W.ipynb`: red conectada mediante una matriz `W`.
+- `03_recurrent_inhibition_renshaw.ipynb`: circuito MN–Renshaw y GUI interactiva.
+- `04_renshaw_comparison_experiments.ipynb`: comparación de cuatro intensidades inhibitorias.
+- `05_spikes_to_muscle_force.ipynb`: conversión spikes→twitches→fuerza y animación 2D.
+- `06_project_summary.ipynb`: síntesis conceptual, resultados, conclusiones y limitaciones.
+
+## Guía de lectura
+
+Cada notebook contiene ahora una capa explicativa antes de los bloques técnicos. La lectura recomendada es secuencial:
+
+```text
+01. dinámica individual y significado de la semilla
+                 ↓
+02. matriz W y corriente sináptica
+                 ↓
+03. flujo MN → Renshaw → inhibición → MN
+                 ↓
+04. métricas y comparación experimental controlada
+                 ↓
+05. spikes → kernel twitch → convolución → fuerza
+                 ↓
+06. interpretación integrada y límites
+```
+
+### Semilla aleatoria
+
+La semilla fija la secuencia pseudoaleatoria usada para ruido, heterogeneidad y conexiones. No representa una propiedad biológica. Repetir parámetros y semilla produce exactamente la misma realización; usar varias semillas permite evaluar si una tendencia es robusta.
+
+### Convención de matrices
+
+Las filas son neuronas de origen y las columnas neuronas de destino. En el circuito Renshaw ambas matrices almacenan magnitudes positivas:
+
+- `W_MN_to_R[i,j]`: excitación desde la motoneurona `i` hacia la Renshaw `j`.
+- `W_R_to_MN[k,i]`: magnitud inhibitoria desde la Renshaw `k` hacia la motoneurona `i`; se resta explícitamente del input motor.
+
+### Alcance de la fuerza
+
+La fuerza se obtiene convolucionando los impulsos de spikes con un kernel twitch de subida rápida y relajación lenta. Se expresa en unidades arbitrarias y funciona como proxy de activación, no como fuerza biomecánica validada.
 
 ## Instalación Inicial
 
