@@ -185,9 +185,12 @@ Así, activar o desactivar la inhibición con la misma semilla compara el mismo 
 """
 
 NB03_FLOW_CODE = """
-from src.visualization import plot_renshaw_signal_flow
+import importlib
+import src.visualization as visualization
 
-plot_renshaw_signal_flow()
+# Recarga el archivo por si el kernel conservaba una versión anterior.
+visualization = importlib.reload(visualization)
+visualization.plot_renshaw_signal_flow()
 plt.show()
 """
 
@@ -297,9 +300,12 @@ Se eligió porque es causal, simple, positiva con `tau_decay > tau_rise`, fácil
 """
 
 NB05_FLOW_CODE = """
-from src.visualization import plot_spikes_to_force_flow
+import importlib
+import src.visualization as visualization
 
-plot_spikes_to_force_flow()
+# Recarga el archivo por si el kernel conservaba una versión anterior.
+visualization = importlib.reload(visualization)
+visualization.plot_spikes_to_force_flow()
 plt.show()
 """
 
